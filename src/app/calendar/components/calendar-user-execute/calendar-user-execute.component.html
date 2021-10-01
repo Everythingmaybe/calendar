@@ -1,0 +1,42 @@
+<div>
+  <button (click)="changeMonth(true)"><</button>
+  <span>{{ monthName$ | async }}, {{ year$ | async }}</span>
+  <button (click)="changeMonth()">></button>
+</div>
+<div>
+  <form [formGroup]="filterForm">
+    <select multiple formControlName="user" name="" id="">
+<!--      <option value="">Не выбрано</option>-->
+      <option *ngFor="let user of users$ | async" [value]="user.id">{{ user.name }}</option>
+    </select>
+
+    <select multiple formControlName="type" name="" id="">
+<!--      <option value="">Не выбрано</option>-->
+      <option *ngFor="let type of types$ | async"
+              [ngStyle]="{ 'background-color': type.color }"
+              [value]="type.id">
+        {{ type.name }}
+      </option>
+    </select>
+  </form>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}">
+          {{ day.number }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let user of users$ | async">
+        <th>{{ user.name }}</th>
+        <td *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
