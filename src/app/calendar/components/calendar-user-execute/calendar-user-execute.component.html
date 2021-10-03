@@ -33,9 +33,11 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let user of users$ | async">
+      <tr *ngFor="let user of usersWithRecords$ | async">
         <th>{{ user.name }}</th>
-        <td *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}"></td>
+        <td *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}">
+          <div></div>
+        </td>
       </tr>
     </tbody>
   </table>

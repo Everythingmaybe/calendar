@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CalendarUserExecuteComponent } from './components/calendar-user-execute/calendar-user-execute.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CalendarRepositoryService } from './repositories/calendar.repository.service';
@@ -20,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [
     CalendarRepositoryService,
-    CalendarService
+    CalendarService,
+    DatePipe,
   ]
 })
 export class CalendarModule { }

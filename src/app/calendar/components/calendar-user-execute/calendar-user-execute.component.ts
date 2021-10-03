@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
-import { RecordType, User } from '../../types';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
+import { Record, RecordType, User } from '../../types';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { catchError, distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { Day, getMonthDays, getMonthName } from '../../../common/utils/date';
 import { FormBuilder } from '@angular/forms';
 
@@ -44,13 +44,22 @@ export class CalendarUserExecuteComponent implements OnInit {
     distinctUntilChanged()
   )
 
+  readonly usersWithRecords$ = combineLatest([
+    this.currentDate$,
+    this.filterForm.valueChanges.pipe(startWith(this.filterForm.value as { user: number[], type: number[] }))
+  ]).pipe(
+    switchMap(([date, { user, type }]) => this.calendarService.getRecords(date, user, type)),
+    switchMap((records: Record[]) => combineLatest([this.users$, this.types$]).pipe(
+      map(([users, types]) => this.calendarService.mapUsersWithRecords(users, records, types))
+    ))
+  )
+
   constructor(
     private calendarService: CalendarService,
     private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void {
-
   }
 
   changeMonth(prev: boolean = false): void {
