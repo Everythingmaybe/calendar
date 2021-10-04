@@ -1,3 +1,5 @@
+import { Day } from '../common/utils/date';
+
 export interface Response<Type> {
   success: number;
   data: Type[];
@@ -44,13 +46,13 @@ export interface Record {
   end_date: Date;
 }
 
-export interface UserWithRecords extends User {
-  records: RecordWithType[]
+export interface DayWithRecords extends Day {
+  records: { [userId: number]: RecordWithType[] }
 }
 
-export type RecordWithType = {
-  type: RecordType
-} & Omit<Record, 'type_id' | 'user_id'>
+export interface RecordWithType extends Omit<Record, 'type_id'> {
+  type: RecordType,
+}
 
 export type UsersResponse = Response<UserResponse>;
 export type RecordTypesResponse = Response<RecordType>

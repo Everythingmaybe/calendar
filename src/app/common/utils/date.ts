@@ -6,6 +6,8 @@ export interface Day {
   isWeekend: boolean;
 }
 
+export const MS_PER_DAY = 1000*60*60*24;
+
 export function getMonthDays(date?: Date): Day[] {
   const tempDate = new Date(date || '');
   tempDate.setMonth(tempDate.getMonth() + 1, 0);
@@ -24,4 +26,9 @@ export function getMonthDays(date?: Date): Day[] {
 
 export function getMonthName(date: Date): string {
   return date.toLocaleDateString('default', { month: 'long' })
+}
+
+export function getTimePercentPerDay(time: Date | string | number): number {
+  const date = new Date(time);
+  return date.getTime() / MS_PER_DAY * 100
 }

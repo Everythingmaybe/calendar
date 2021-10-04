@@ -3,6 +3,7 @@
   <span>{{ monthName$ | async }}, {{ year$ | async }}</span>
   <button (click)="changeMonth()">></button>
 </div>
+
 <div>
   <form [formGroup]="filterForm">
     <select multiple formControlName="user" name="" id="">
@@ -25,7 +26,7 @@
   <table>
     <thead>
       <tr>
-        <th></th>
+        <th scope="col"></th>
         <th *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}">
           {{ day.number }}
         </th>
@@ -35,8 +36,15 @@
     <tbody>
       <tr *ngFor="let user of usersWithRecords$ | async">
         <th>{{ user.name }}</th>
-        <td *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}">
-          <div></div>
+        <td *ngFor="let day of daysWithRecords$ | async" [ngClass]="{'weekend': day.isWeekend}">
+          <ng-container *ngIf="day.records[user.id] as records">
+            <div *ngFor="let record of records"
+                 [title]="record.description"
+                 [ngStyle]="getRecordStyle(record)"
+                 class="record">
+              {{ record.description }} ({{ record.start | date: 'YYYY.MM.dd' }} - {{ record.end | date: 'YYYY.MM.dd' }})
+            </div>
+          </ng-container>
         </td>
       </tr>
     </tbody>

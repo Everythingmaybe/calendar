@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
-import { Record, RecordType, User } from '../../types';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { catchError, distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { Day, getMonthDays, getMonthName } from '../../../common/utils/date';
+import { DayWithRecords, RecordType, RecordWithType, User } from '../../types';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { Day, getMonthDays, getMonthName, getTimePercentPerDay } from '../../../common/utils/date';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -44,13 +44,29 @@ export class CalendarUserExecuteComponent implements OnInit {
     distinctUntilChanged()
   )
 
-  readonly usersWithRecords$ = combineLatest([
+  readonly usersWithRecords$: Observable<User[]> = this.users$.pipe(
+    switchMap((users) => this.records$.pipe(
+      map((records) => users
+      .filter((user) => records
+        .find((record) => record.user_id === user.id)))
+    )),
+  )
+
+  readonly records$ = combineLatest([
     this.currentDate$,
     this.filterForm.valueChanges.pipe(startWith(this.filterForm.value as { user: number[], type: number[] }))
   ]).pipe(
     switchMap(([date, { user, type }]) => this.calendarService.getRecords(date, user, type)),
-    switchMap((records: Record[]) => combineLatest([this.users$, this.types$]).pipe(
-      map(([users, types]) => this.calendarService.mapUsersWithRecords(users, records, types))
+    shareReplay(1)
+  )
+
+  readonly daysWithRecords$: Observable<DayWithRecords[]> = this.days$.pipe(
+    switchMap((days) => this.records$.pipe(
+      switchMap((records) => this.types$.pipe(
+        map((types) => this.calendarService.mapRecordTypesAsDict(types)),
+        map((typesDict) => records.map((record) => this.calendarService.mapRecordWithType(record, typesDict))),
+      )),
+      map((records: RecordWithType[]) => this.calendarService.mapDaysWithRecords(days, records))
     ))
   )
 
@@ -60,6 +76,7 @@ export class CalendarUserExecuteComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // this.calendarService.addRecords().subscribe()
   }
 
   changeMonth(prev: boolean = false): void {
@@ -67,5 +84,15 @@ export class CalendarUserExecuteComponent implements OnInit {
     const step = prev ? -1 : 1;
     currentDate.setMonth(currentDate.getMonth() + step);
     this.currentDate$.next(currentDate);
+  }
+
+  getRecordStyle({ start_date: start, end_date: end, type: { color } }: RecordWithType): {[key: string]: string} {
+    const startDayDate = new Date(start);
+    startDayDate.setHours(0,0,0,0);
+    return {
+      width: getTimePercentPerDay(end.getTime() - start.getTime()) + '%',
+      left: getTimePercentPerDay(start.getTime() - startDayDate.getTime()) + '%',
+      backgroundColor: color,
+    }
   }
 }
