@@ -5,6 +5,8 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { Day, getMonthDays, getMonthName, getTimePercentPerDay } from '../../../common/utils/date';
 import { FormBuilder } from '@angular/forms';
+import { ModalService } from '../../../common/modal/modal.service';
+import { RecordInfoModalComponent } from '../modals/record-info-modal/record-info-modal.component';
 
 @Component({
   selector: 'calendar-user-execute',
@@ -73,10 +75,15 @@ export class CalendarUserExecuteComponent implements OnInit {
   constructor(
     private calendarService: CalendarService,
     private formBuilder: FormBuilder,
+    private modalService: ModalService,
   ) { }
 
   ngOnInit(): void {
     // this.calendarService.addRecords().subscribe()
+  }
+
+  open() {
+    this.modalService.open(RecordInfoModalComponent);
   }
 
   changeMonth(prev: boolean = false): void {

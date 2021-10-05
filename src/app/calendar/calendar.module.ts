@@ -5,15 +5,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { CalendarRepositoryService } from './repositories/calendar.repository.service';
 import { CalendarService } from './services/calendar.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RecordInfoModalComponent } from './components/modals/record-info-modal/record-info-modal.component';
+import { ModalModule } from '../common/modal/modal.module';
 
 @NgModule({
   declarations: [
-    CalendarUserExecuteComponent
+    CalendarUserExecuteComponent,
+    RecordInfoModalComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    ModalModule,
   ],
   exports: [
     CalendarUserExecuteComponent
