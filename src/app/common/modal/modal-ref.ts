@@ -5,7 +5,7 @@ export class ModalRef {
   public readonly afterClosed: Observable<any> = this._afterClosed.asObservable();
 
   close(result?: any): void {
-    this._afterClosed.next();
+    this._afterClosed.next(result);
     this._afterClosed.complete();
   }
 }
