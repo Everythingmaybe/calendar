@@ -12,10 +12,9 @@ import { RecordInfoModalComponent } from '../modals/record-info-modal/record-inf
   selector: 'calendar-user-execute',
   templateUrl: './calendar-user-execute.component.html',
   styleUrls: ['./calendar-user-execute.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarUserExecuteComponent implements OnInit {
-
   private readonly currentDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
 
   readonly filterForm = this.formBuilder.group({
