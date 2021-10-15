@@ -41,6 +41,7 @@ export class ModalService {
     const componentRef = this.componentFactoryResolver
     .resolveComponentFactory(ModalComponent)
     .create(new ModalInjector(this.injector, injectionMap));
+    console.log(componentRef.instance)
 
     this.appRef.attachView(componentRef.hostView);
 

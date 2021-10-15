@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { Day } from '../../common/utils/date';
+import { CalendarServicesModule } from '../calendar-services.module';
 
-@Injectable()
+@Injectable({ providedIn: CalendarServicesModule })
 export class CalendarService {
 
   constructor(

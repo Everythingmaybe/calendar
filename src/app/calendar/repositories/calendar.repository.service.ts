@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { NewRecord, RecordResponse, RecordsResponse, RecordTypesResponse, UsersResponse } from '../types';
 import { Observable } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
+import { CalendarServicesModule } from '../calendar-services.module';
 
 const records: RecordResponse[] = [
   {
@@ -41,7 +42,7 @@ const records: RecordResponse[] = [
 ]
 
 
-@Injectable()
+@Injectable({ providedIn: CalendarServicesModule })
 export class CalendarRepositoryService {
 
   private readonly url: string = environment.calendar_api_url;

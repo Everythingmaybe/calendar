@@ -14,7 +14,7 @@
     <select multiple formControlName="type" name="" id="">
 <!--      <option value="">Не выбрано</option>-->
       <option *ngFor="let type of types$ | async"
-              [ngStyle]="{ 'background-color': type.color }"
+              [style.background-color]="type.color"
               [value]="type.id">
         {{ type.name }}
       </option>
@@ -27,7 +27,7 @@
     <thead>
       <tr>
         <th scope="col"></th>
-        <th *ngFor="let day of days$ | async" [ngClass]="{'weekend': day.isWeekend}">
+        <th *ngFor="let day of days$ | async" [class.weekend]="day.isWeekend">
           {{ day.number }}
         </th>
       </tr>
@@ -36,11 +36,11 @@
     <tbody>
       <tr *ngFor="let user of usersWithRecords$ | async">
         <th>{{ user.name }}</th>
-        <td *ngFor="let day of daysWithRecords$ | async" [ngClass]="{'weekend': day.isWeekend}">
+        <td *ngFor="let day of daysWithRecords$ | async" [class.weekend]="day.isWeekend">
           <ng-container *ngIf="day.records[user.id] as records">
             <div *ngFor="let record of records"
                  [title]="record.description"
-                 [ngStyle]="getRecordStyle(record)"
+                 [style]="getRecordStyle(record)"
                  class="record">
               {{ record.description }} ({{ record.start | date: 'YYYY.MM.dd' }} - {{ record.end | date: 'YYYY.MM.dd' }})
             </div>
